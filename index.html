@@ -11,8 +11,7 @@
 <style>
 :root{--bg:#fff5f7;--surface:#ffffff;--ink:#3a2330;--muted:#7a5a68;--pink:#e8648c;--pink-d:#c43f6a;--soft:#ffd9e4;--gold:#b8860b;--line:#f3c6d4;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1218;--surface:#2b1a23;--ink:#fbe9ef;--muted:#d1aab9;--pink:#f0719a;--pink-d:#ff8fb3;--soft:#4a2634;--gold:#e6c35c;--line:#5a3343}}
-:root[data-theme="dark"]{--bg:#1f1218;--surface:#2b1a23;--ink:#fbe9ef;--muted:#d1aab9;--pink:#f0719a;--pink-d:#ff8fb3;--soft:#4a2634;--gold:#e6c35c;--line:#5a3343}
+html{color-scheme:light}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 Nunito,system-ui,sans-serif}
@@ -31,6 +30,19 @@ p{margin:0 0 12px}
 @keyframes btnpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 @keyframes shine{0%,55%{left:-60%}100%{left:130%}}
 @media (prefers-reduced-motion:reduce){.btn,.btn:after{animation:none}}
+.xo{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(58,35,48,.65)}
+.xo.open{display:flex}
+.xo-card{position:relative;max-width:420px;width:100%;max-height:100%;overflow:auto;background:var(--surface);border:3px solid var(--pink);border-radius:28px;padding:22px 20px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:xopop .3s ease-out}
+@keyframes xopop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.xo-card{animation:none}}
+.xo-x{position:absolute;top:8px;right:10px;border:0;background:none;font-size:1.9rem;line-height:1;color:var(--muted);cursor:pointer;padding:8px}
+.xo .tag{display:inline-block;background:var(--pink);color:#fff;font:800 .85rem Nunito,sans-serif;padding:6px 14px;border-radius:999px;margin-bottom:6px}
+.xo h3{font:800 1.5rem Fraunces,Georgia,serif;margin:6px 0 6px}
+.xo .fan{height:175px;max-width:240px;margin:8px auto 4px}
+.xo-old{margin:0;color:var(--muted);font-size:1.05rem}
+.xo-price{font:800 3.2rem Fraunces,Georgia,serif;color:var(--pink-d);line-height:1.05}
+.xo-price small{font-size:1.3rem;margin-right:4px}
+.xo-no{display:inline-block;background:none;border:0;color:var(--muted);font:600 .95rem Nunito,sans-serif;text-decoration:underline;cursor:pointer;padding:10px}
 .hero{padding-top:28px;text-align:center}
 .hero h1{text-align:center}
 .vsl{position:relative;width:min(100%,360px);aspect-ratio:9/16;margin:18px auto 0;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 10px 30px rgba(196,63,106,.25)}
@@ -184,8 +196,8 @@ footer{text-align:center;font-size:.85rem;color:var(--muted);padding:10px 0 30px
 <li>Passo a passo para montar</li>
 <li>Arquivos em A4, prontos para imprimir</li>
 </ul>
-<p class="old"><s>De R$ 47,00</s><span class="off">58% OFF</span></p>
-<div class="price"><small>R$</small>19,90</div>
+<p class="old"><s>De R$ 47,00</s><span class="off">41% OFF</span></p>
+<div class="price"><small>R$</small>27,90</div>
 <p class="muted" style="margin:0">Pagamento único · acesso imediato</p>
 <a class="btn buy" href="#">QUERO COMPRAR AGORA</a>
 <div class="trust"><div><span>🔒</span>Compra segura</div><div><span>⚡</span>Acesso imediato</div><div><span>🛡️</span>7 dias de garantia</div></div>
@@ -212,10 +224,30 @@ footer{text-align:center;font-size:.85rem;color:var(--muted);padding:10px 0 30px
 <footer>Livro de Vestir Mágico · Todos os direitos reservados</footer>
 </main>
 
+<div class="xo" id="xo" role="dialog" aria-modal="true" aria-labelledby="xot">
+<div class="xo-card">
+<button class="xo-x" type="button" aria-label="Fechar" data-close>×</button>
+<span class="tag">Espere!</span>
+<h3 id="xot">Antes de ir embora…</h3>
+<p class="muted" style="margin:0">Liberamos um desconto especial só para você, válido agora.</p>
+<div class="fan" aria-hidden="true">
+<img data-k="festa" alt="">
+<img data-k="praia" alt="">
+<img data-k="escola" alt="">
+</div>
+<p class="xo-old">De <s>R$ 27,90</s> por apenas</p>
+<div class="xo-price"><small>R$</small>19,90</div>
+<a class="btn" id="xobuy" href="#">QUERO POR R$ 19,90</a>
+<p class="muted" style="margin:0;font-size:.85rem">Pagamento único · acesso imediato · 7 dias de garantia</p>
+<button class="xo-no" type="button" data-close>Não, obrigado</button>
+</div>
+</div>
 <script defer src="https://cdn.jsdelivr.net/npm/@vimeo/player@2.22.0/dist/player.min.js"></script>
 <script>
 // COLE AQUI o link do seu checkout (Hotmart, Kiwify, Eduzz...)
 var CHECKOUT_URL="https://pay.wiapy.com/F1Q2hZZyzVGk";
+// COLE AQUI o link do checkout do pop-up de saída (produto de R$ 19,90)
+var CHECKOUT_URL_POPUP="";
 var vf=document.getElementById("vslf"),pb=document.getElementById("playbtn"),vsl=document.getElementById("vsl");
 var reacts=document.querySelectorAll(".react");
 reacts.forEach(function(box){
@@ -230,6 +262,24 @@ if(window.Vimeo){var p=f._p||(f._p=new Vimeo.Player(f));p.setMuted(false).catch(
 }catch(e){fb()}
 });
 });
+(function(){
+var box=document.getElementById("xo");if(!box)return;
+function get(){try{return sessionStorage.getItem("xo")}catch(e){return null}}
+function set(){try{sessionStorage.setItem("xo","1")}catch(e){}}
+document.querySelectorAll(".offer .buy").forEach(function(a){a.addEventListener("click",set)});
+if(!CHECKOUT_URL_POPUP||get())return;
+var shown=false,armed=false,buy=document.getElementById("xobuy");
+buy.href=CHECKOUT_URL_POPUP;buy.addEventListener("click",set);
+function openBox(){if(shown)return;shown=true;set();
+document.querySelectorAll(".xo .fan img").forEach(function(im){var s=document.getElementById("p-"+im.dataset.k);if(s)im.src=s.src});
+box.classList.add("open");document.body.style.overflow="hidden";buy.focus()}
+function closeBox(){box.classList.remove("open");document.body.style.overflow=""}
+setTimeout(function(){armed=true},8000);
+document.addEventListener("mouseout",function(e){if(armed&&!e.relatedTarget&&e.clientY<=8)openBox()});
+try{history.pushState({xo:1},"",location.href);window.addEventListener("popstate",function(){if(armed&&!shown)openBox()})}catch(e){}
+box.addEventListener("click",function(e){if(e.target===box||e.target.hasAttribute("data-close"))closeBox()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeBox()});
+})();
 document.querySelectorAll(".fan img").forEach(function(im){var s=document.getElementById("p-"+im.dataset.k);if(s)im.src=s.src});
 function autoplayFallback(){vf.src=vf.src+"&autoplay=1"}
 pb.addEventListener("click",function(){
