@@ -134,7 +134,7 @@ footer{text-align:center;font-size:.85rem;color:var(--muted);padding:10px 0 30px
 <h1>Sua filha vira a personagem do próprio livro de vestir</h1>
 <p class="muted">A brincadeira sem tela que faz ela se ver como a protagonista. Baixe, imprima e veja a magia acontecer em minutos.</p>
 <div class="vsl" id="vsl">
-<iframe id="vslf" data-src="https://player.vimeo.com/video/1247020455?title=0&byline=0&portrait=0&dnt=1&playsinline=1" title="Vídeo de apresentação do Livro de Vestir Mágico" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<iframe id="vslf" data-src="https://player.vimeo.com/video/1247020455?title=0&byline=0&portrait=0&dnt=1&playsinline=1" title="Vídeo de apresentação do Livro de Vestir Mágico" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen playsinline></iframe>
 <button class="play" id="playbtn" type="button" aria-label="Assistir ao vídeo"><span class="circle"><span class="tri"></span></span></button>
 </div>
 <a class="btn buy" href="#">QUERO O MEU AGORA</a>
@@ -302,11 +302,21 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape")closeBox()})
 document.querySelectorAll(".fan img").forEach(function(im){var s=document.getElementById("p-"+im.dataset.k);if(s)im.src=s.src});
 function loadVsl(){if(vf&&!vf.getAttribute("src")){vf.src=vf.getAttribute("data-src")}}
 if(document.readyState==="complete"){setTimeout(loadVsl,300)}else{window.addEventListener("load",function(){setTimeout(loadVsl,300)})}
-function autoplayFallback(){vf.src=vf.src+"&autoplay=1"}
+function autoplayFallback(){vf.src=(vf.getAttribute("src")||vf.getAttribute("data-src"))+"&autoplay=1&muted=0"}
 pb.addEventListener("click",function(){
 vsl.classList.add("started");
-if(!vf.getAttribute("src")){vf.src=vf.getAttribute("data-src")+"&autoplay=1";return}
-try{if(window.Vimeo){new Vimeo.Player(vf).play().catch(autoplayFallback)}else{autoplayFallback()}}catch(e){autoplayFallback()}
+if(!vf.getAttribute("src")){
+  vf.src=vf.getAttribute("data-src")+"&autoplay=1&muted=0";
+  return;
+}
+try{
+  if(window.Vimeo){
+    var p = vf._p || (vf._p = new Vimeo.Player(vf));
+    p.setMuted(false).catch(function(){}).then(function(){return p.play()}).catch(autoplayFallback);
+  }else{
+    autoplayFallback();
+  }
+}catch(e){autoplayFallback()}
 });
 document.querySelectorAll(".buy").forEach(function(a){
 if(a.closest(".offer")){a.href=CHECKOUT_URL}else{a.href="#oferta";a.addEventListener("click",function(e){e.preventDefault();var o=document.getElementById("oferta");o.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"})})}
